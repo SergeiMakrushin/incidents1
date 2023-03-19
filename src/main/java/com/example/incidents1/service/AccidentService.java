@@ -1,6 +1,8 @@
 package com.example.incidents1.service;
 
 import com.example.incidents1.model.Accident;
+import com.example.incidents1.model.AccidentType;
+import com.example.incidents1.model.Rule;
 import com.example.incidents1.repository.AccidentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,8 +19,11 @@ public class AccidentService {
         this.accidentRepository = accidentRepository;
     }
 
-    public Accident saveAccident(Accident accident) {
-        return accidentRepository.save(accident);
+    public boolean saveAccident(Accident accident, Optional <AccidentType> optionalAccidentType, Set <Rule> rule ) {
+       AccidentType accidentType = optionalAccidentType.get();
+       accident.setType(accidentType);
+       accident.setRule(rule);
+       return accidentRepository.save(accident) !=null;
     }
 
     public void removeAccidentById(int id) {
@@ -36,20 +41,19 @@ public class AccidentService {
         for (Accident accident1 : accidentList) {
             accidentMap.put(accident.getId(), accident1);
         }
-        return accidentMap.computeIfPresent(accident.getId(), (accidentId, oldAccident) -> new Accident(
-                accidentId, accident.getName(), accident.getDescription(), accident.getAddress())) != null;
+        return accidentMap.computeIfPresent(accident.getId(), (accidentId, oldAccident) ->
+                new Accident(accidentId, accident.getName(), accident.getDescription(), accident.getAddress(), accident.getType(), accident.getRule())) != null;
     }
 
     public List<Accident> findAllAccident() {
         return accidentRepository.findAll();
     }
 
-    public Optional<Accident> findAccidentById(int id){
-        Accident accident =accidentRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Случай с указанным id не найден"));
-return Optional.ofNullable(accident);
+    public Optional<Accident> findAccidentById(int id) {
+        Accident accident = accidentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Случай с указанным id не найден"));
+        return Optional.ofNullable(accident);
 
     }
-
 
 
 }
