@@ -121,8 +121,20 @@
                 <artifactId>liquibase-maven-plugin</artifactId>
                 <version>4.15.0</version>
                 <configuration>
-                    <propertyFile>db/liquibase.properties</propertyFile>
+                    <url>jdbs:postgresql://localchost:5432/auto_crash</url>
+                    <username>postgres</username>
+                    <password>Password1</password>
+                    <changeLogFile>db/dbchangelog.xml</changeLogFile>
                 </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>clearCheckSums</goal>
+                            <goal>update</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
         <plugin>

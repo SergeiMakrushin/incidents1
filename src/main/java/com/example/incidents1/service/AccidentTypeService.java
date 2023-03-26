@@ -19,7 +19,7 @@ public class AccidentTypeService {
     }
 
     public List<AccidentType> getAll() {
-        return accidentTypeRepository.findall();
+        return accidentTypeRepository.findAll();
     }
 
     public Optional <AccidentType>  getAccidentTypeById(int id) {
